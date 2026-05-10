@@ -13,12 +13,23 @@ export default function AuditPage() {
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    // Load from localStorage on mount
     const saved = localStorage.getItem('auditState');
     if (saved) {
-      const { step, results } = JSON.parse(saved);
-      setCurrentStep(step);
-      if (results) setResults(results);
+      try {
+        const { step, results: savedResults } = JSON.parse(saved);
+        if (step === 2 && savedResults && Array.isArray(savedResults)) {
+          setCurrentStep(2);
+          setResults(savedResults);
+        } else if (step === 1) {
+          setCurrentStep(1);
+        } else {
+          localStorage.removeItem('auditState');
+          setCurrentStep(1);
+        }
+      } catch (error) {
+        localStorage.removeItem('auditState');
+        setCurrentStep(1);
+      }
     }
   }, []);
 
@@ -31,13 +42,19 @@ export default function AuditPage() {
   const handleNext = () => {
     const newStep = currentStep + 1;
     setCurrentStep(newStep);
-    localStorage.setItem('auditState', JSON.stringify({ step: newStep, results }));
+    // Only persist valid steps (1-2)
+    if (newStep <= 2) {
+      localStorage.setItem('auditState', JSON.stringify({ step: newStep, results }));
+    }
   };
 
   const handlePrevious = () => {
     const newStep = currentStep - 1;
     setCurrentStep(newStep);
-    localStorage.setItem('auditState', JSON.stringify({ step: newStep, results }));
+    // Only persist valid steps
+    if (newStep >= 1 && newStep <= 2) {
+      localStorage.setItem('auditState', JSON.stringify({ step: newStep, results }));
+    }
   };
 
   const handleReset = () => {

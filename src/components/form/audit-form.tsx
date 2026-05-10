@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { z } from 'zod';
 import { Loader2, Sparkles } from 'lucide-react';
 
@@ -44,16 +44,47 @@ interface AuditFormProps {
 export function AuditForm({ onSubmit }: AuditFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [formData, setFormData] = useState({
+    toolName: 'ChatGPT',
+    plan: 'Plus',
+    monthlySpend: '20',
+    seats: '1',
+    teamSize: '5',
+    useCase: 'coding',
+  });
+
+  // Load form data from localStorage on mount
+  useEffect(() => {
+    const saved = localStorage.getItem('auditFormData');
+    if (saved) {
+      try {
+        setFormData(JSON.parse(saved));
+      } catch (error) {
+        console.error('Failed to load saved form data:', error);
+      }
+    }
+  }, []);
+
+  // Save form data to localStorage whenever it changes
+  const handleInputChange = (field: string, value: string) => {
+    const updated = { ...formData, [field]: value };
+    setFormData(updated);
+    localStorage.setItem('auditFormData', JSON.stringify(updated));
+  };
 
   async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setLoading(true);
     setErrors({});
 
-    const formData = new FormData(event.currentTarget);
-    const rawData = Object.fromEntries(formData.entries());
-    
-    const result = formSchema.safeParse(rawData);
+    const result = formSchema.safeParse({
+      toolName: formData.toolName,
+      plan: formData.plan,
+      monthlySpend: formData.monthlySpend,
+      seats: formData.seats,
+      teamSize: formData.teamSize,
+      useCase: formData.useCase,
+    });
 
     if (!result.success) {
       const formattedErrors: Record<string, string> = {};
@@ -114,7 +145,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
           <div className="grid gap-6 md:grid-cols-2">
             
             <Field label="AI Tool" error={errors.toolName}>
-              <Select name="toolName" defaultValue="ChatGPT">
+              <Select value={formData.toolName} onValueChange={(value:any) => handleInputChange('toolName', value)}>
                 <SelectTrigger className="h-12 rounded-xl">
                   <SelectValue placeholder="Select a tool" />
                 </SelectTrigger>
@@ -129,7 +160,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
             </Field>
 
             <Field label="Current Plan" error={errors.plan}>
-              <Select name="plan" defaultValue="Plus">
+              <Select value={formData.plan} onValueChange={(value:any) => handleInputChange('plan', value)}>
                 <SelectTrigger className="h-12 rounded-xl">
                   <SelectValue placeholder="Select plan" />
                 </SelectTrigger>
@@ -145,33 +176,33 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
 
             <Field label="Monthly Spend ($)" error={errors.monthlySpend}>
               <Input 
-                name="monthlySpend" 
+                value={formData.monthlySpend}
+                onChange={(e) => handleInputChange('monthlySpend', e.target.value)}
                 type="number" 
-                defaultValue={20}
                 className="h-12 rounded-xl" 
               />
             </Field>
 
             <Field label="Seats" error={errors.seats}>
               <Input 
-                name="seats" 
+                value={formData.seats}
+                onChange={(e) => handleInputChange('seats', e.target.value)}
                 type="number" 
-                defaultValue={1}
                 className="h-12 rounded-xl" 
               />
             </Field>
 
             <Field label="Team Size" error={errors.teamSize}>
               <Input 
-                name="teamSize" 
+                value={formData.teamSize}
+                onChange={(e) => handleInputChange('teamSize', e.target.value)}
                 type="number" 
-                defaultValue={5}
                 className="h-12 rounded-xl" 
               />
             </Field>
 
             <Field label="Primary Use Case" error={errors.useCase}>
-              <Select name="useCase" defaultValue="coding">
+              <Select value={formData.useCase} onValueChange={(value:any) => handleInputChange('useCase', value)}>
                 <SelectTrigger className="h-12 rounded-xl">
                   <SelectValue placeholder="Select use case" />
                 </SelectTrigger>
