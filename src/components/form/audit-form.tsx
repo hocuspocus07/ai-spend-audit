@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/select';
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
+import { AuditRecommendation } from '@/lib/types';
 
 const formSchema = z.object({
   toolName: z.string().min(1, 'Please select a tool'),
@@ -36,7 +37,11 @@ function Field({ label, error, children }: { label: string; error?: string; chil
   );
 }
 
-export function AuditForm() {
+interface AuditFormProps {
+  onSubmit: (results: AuditRecommendation[]) => void;
+}
+
+export function AuditForm({ onSubmit }: AuditFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
@@ -54,7 +59,7 @@ export function AuditForm() {
       const formattedErrors: Record<string, string> = {};
       result.error.issues.forEach((issue) => {
         const key = String(issue.path[0]);
-formattedErrors[key] = issue.message;
+        formattedErrors[key] = issue.message;
       });
       setErrors(formattedErrors);
       setLoading(false);
@@ -78,9 +83,10 @@ formattedErrors[key] = issue.message;
       });
       
       const data = await response.json();
-      console.log(data);
+      onSubmit(data);
     } catch (error) {
       console.error(error);
+      setErrors({ submit: 'Failed to run audit. Please try again.' });
     } finally {
       setLoading(false);
     }

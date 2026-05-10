@@ -35,7 +35,7 @@ export function AuditStepper({ currentStep }: AuditStepperProps) {
             </span>
             {idx !== steps.length - 1 && (
               <div className={cn(
-                "absolute left-[50%] top-5 -z-0 h-[2px] w-full",
+                "absolute left-[50%] top-5 z-0 h-0.5 w-full",
                 isCompleted ? "bg-emerald-500" : "bg-zinc-100 dark:bg-zinc-800"
               )} />
             )}
