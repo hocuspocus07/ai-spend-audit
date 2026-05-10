@@ -11,3 +11,11 @@
 **What I learned:** Simple conditional logic becomes difficult to scale, but structuring the logic in a way that we have reusable rules makes the system easier to test and scale.
 **Blockers / what I'm stuck on:** Waiting for the reply from real world users. Recommendation thresholds need tuning.
 **Plan for tomorrow:** Integrate the audit engine with the frontend form flow and design the audit results UI.
+
+## Day 3 2026-05-09
+**Hours worked:** 5
+**What I did:** - Built the audit input UI using shadcn/ui components (Select, Input, Card).
+- Integrated the modular Audit Engine logic with the frontend form state.
+**What I learned:** Handling dynamic form fields for multiple AI tools requires careful state management to avoid performance lags during re-renders.
+**Blockers / what I'm stuck on:** Ensuring the UI remains high-contrast and minimalistic while displaying dense pricing comparison data.
+**Plan for tomorrow:** Set up the Anthropic API for personalized summaries and connect the Supabase lead capture backend.
