@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { AuditRecommendation } from '@/lib/types';
 import { cn } from '@/lib/utils';
+import { AuditSummary } from './audit-summary';
 
 interface AuditResultsProps {
     results: AuditRecommendation[];
@@ -44,6 +45,9 @@ export function AuditResults({ results, onNext, onPrevious }: AuditResultsProps)
                     </div>
                 </div>
             )}
+
+            {/* AI-Generated Summary */}
+            {results.length > 0 && <AuditSummary result={results[0]} />}
 
             {/* Result Cards */}
             <div className="space-y-4">
