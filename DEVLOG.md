@@ -19,3 +19,10 @@
 **What I learned:** Handling dynamic form fields for multiple AI tools requires careful state management to avoid performance lags during re-renders.
 **Blockers / what I'm stuck on:** Ensuring the UI remains high-contrast and minimalistic while displaying dense pricing comparison data.
 **Plan for tomorrow:** Set up the Anthropic API for personalized summaries and connect the Supabase lead capture backend.
+
+## Day 3 2026-05-10
+**Hours worked:** 2
+**What I did:** - Built the initial logic for ai generated summary.
+**What I learned:** Anthropic API best practices.
+**Blockers / what I'm stuck on:** More time as end semester exams are underway.
+**Plan for tomorrow:** Polish the UI, create tests.
