@@ -7,14 +7,16 @@ import { Badge } from '@/components/ui/badge';
 import { AuditRecommendation } from '@/lib/types';
 import { cn } from '@/lib/utils';
 import { AuditSummary } from './audit-summary';
+import { LeadCaptureForm } from './lead-capture-form';
 
 interface AuditResultsProps {
     results: AuditRecommendation[];
+    onShareableUrl?: (url: string) => void;
     onNext: () => void;
     onPrevious: () => void;
 }
 
-export function AuditResults({ results, onNext, onPrevious }: AuditResultsProps) {
+export function AuditResults({ results, onNext, onPrevious,onShareableUrl  }: AuditResultsProps) {
     const totalMonthlySavings = results.reduce((sum, r) => sum + r.monthlySavings, 0);
     const totalAnnualSavings = results.reduce((sum, r) => sum + r.annualSavings, 0);
     const hasHighSavings = totalMonthlySavings > 500;
@@ -164,6 +166,13 @@ export function AuditResults({ results, onNext, onPrevious }: AuditResultsProps)
                     Next Step
                 </Button>
             </div>
+            <LeadCaptureForm
+        auditResults={results}
+        onSuccess={(shareUrl) => {
+          onShareableUrl?.(shareUrl);
+          // Show success modal or redirect
+        }}
+      />
         </div>
     );
 }
