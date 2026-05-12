@@ -129,7 +129,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
         <div className="flex items-center gap-2">
           <Badge variant="secondary" className="bg-emerald-100 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400">
             <Sparkles className="mr-1 h-3 w-3" />
-            AI Intelligence
+            Free AI Spend Analysis
           </Badge>
         </div>
         <div className="space-y-1.5">

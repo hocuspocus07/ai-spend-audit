@@ -26,14 +26,15 @@ export async function generateMetadata({ params }: { params: { slug: string } })
   };
 }
 
-export default async function SharePage({ params }: { params: { slug: string } }) {
+export default async function SharePage({ params }: { params: Promise<{ slug: string }> }) {
   const { data: lead, error } = await supabase
     .from('leads')
     .select('*')
-    .eq('share_url', params.slug)
+    .eq('share_url', (await params).slug)
     .single();
 
   if (error || !lead) {
+    console.log('Lead not found for slug:', (await params).slug, 'Error:', error);
     return <div className="p-6 text-center">Audit not found</div>;
   }
 

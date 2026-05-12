@@ -108,7 +108,7 @@ export async function POST(req: NextRequest) {
     // Send confirmation email
     try {
       await resend.emails.send({
-        from: 'noreply@credex.rocks',
+        from: 'onboarding@resend.dev',
         to: email,
         subject: 'Your AI Spend Audit Results',
         html: `
