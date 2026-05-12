@@ -20,9 +20,16 @@
 **Blockers / what I'm stuck on:** Ensuring the UI remains high-contrast and minimalistic while displaying dense pricing comparison data.
 **Plan for tomorrow:** Set up the Anthropic API for personalized summaries and connect the Supabase lead capture backend.
 
-## Day 3 2026-05-10
+## Day 4 2026-05-10
 **Hours worked:** 2
 **What I did:** - Built the initial logic for ai generated summary.
 **What I learned:** Anthropic API best practices.
 **Blockers / what I'm stuck on:** More time as end semester exams are underway.
 **Plan for tomorrow:** Polish the UI, create tests.
+
+## Day 5 2026-05-12
+**Hours worked:** 3
+**What I did:** - Built the UI for shareable results page, setup supabase for lead storage, switched to open-ai api key as it is more generous.
+**What I learned:** RLS on supabase
+**Blockers / what I'm stuck on:** Test cases.
+**Plan for tomorrow:** write the essential files for submission.
