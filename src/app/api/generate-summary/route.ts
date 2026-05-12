@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server';
-import Anthropic from '@anthropic-ai/sdk';
+import OpenAI from 'openai';
 
-const client = new Anthropic({
-  apiKey: process.env.ANTHROPIC_API_KEY,
+const client = new OpenAI({
+  apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Hardcoded fallback templates indexed by tool name
@@ -48,11 +48,14 @@ export async function POST(req: Request) {
 
 Generate a personalized summary (~100 words) explaining why they should consider this recommendation, what they'll gain, and any next steps they should take. Be specific and actionable.`;
 
-    const message = await client.messages.create({
-      model: 'claude-3-5-sonnet-20241022',
+    const message = await client.chat.completions.create({
+      model: 'gpt-4o-mini', 
       max_tokens: 150,
-      system: systemPrompt,
       messages: [
+        {
+          role: 'system',
+          content: systemPrompt,
+        },
         {
           role: 'user',
           content: userPrompt,
@@ -61,9 +64,8 @@ Generate a personalized summary (~100 words) explaining why they should consider
     });
 
     const summary =
-      message.content[0].type === 'text'
-        ? message.content[0].text
-        : DEFAULT_FALLBACK(toolName, monthlySpend, auditResult.monthlySavings);
+      message.choices[0].message.content ||
+      DEFAULT_FALLBACK(toolName, monthlySpend, auditResult.monthlySavings);
 
     return NextResponse.json({ summary });
   } catch (error) {

@@ -4,8 +4,7 @@
 
 **Purpose**: Generate concise, personalized 100-word insights about AI tool subscription optimization based on audit results.
 
-**Model**: Claude 3.5 Sonnet (Anthropic)
-
+**Model**: GPT-4o Mini (OpenAI)
 ---
 
 ### System Prompt
