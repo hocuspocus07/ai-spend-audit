@@ -27,6 +27,10 @@ export function AuditSummary({ result }: AuditSummaryProps) {
           }),
         });
 
+        if (!response.ok) {
+          throw new Error('Failed to generate summary');
+        }
+
         const data = await response.json();
         setSummary(data.summary);
         setIsFallback(data.fallback || false);

@@ -27,30 +27,54 @@ const DEFAULT_FALLBACK = (toolName: string, spend: number, savings: number) =>
   `Your ${toolName} subscription at $${spend}/month represents an investment in AI capabilities for your team. Based on our analysis, we've identified opportunities to optimize your stack and reduce costs by $${savings.toFixed(0)}/month. We recommend reviewing your team's actual usage patterns against market alternatives. By consolidating overlapping tools or leveraging open-source alternatives for specific tasks, you can maintain productivity while reducing expenses. Consider which features your team actively uses and prioritize those that deliver the highest ROI.`;
 
 export async function POST(req: Request) {
+  let body;
+
   try {
-    const { toolName, monthlySpend, auditResult } = await req.json();
+    body = await req.json();
+
+    const { toolName, monthlySpend, auditResult } = body;
 
     if (!toolName || monthlySpend === undefined || !auditResult) {
       return NextResponse.json(
-        { error: 'Missing required fields: toolName, monthlySpend, auditResult' },
+        {
+          error:
+            'Missing required fields: toolName, monthlySpend, auditResult',
+        },
         { status: 400 }
       );
     }
 
-    const systemPrompt = `You are a concise AI optimization consultant. Generate a personalized, actionable summary (~100 words) for a user about their AI tool subscription. Be specific to their tool and situation. Focus on practical next steps. Tone: professional, encouraging, non-salesy.`;
+    const systemPrompt = `
+You are a concise AI optimization consultant.
 
-    const userPrompt = `User Details:
+Generate a personalized, actionable summary (~100 words)
+for a user about their AI tool subscription.
+
+Be specific to their tool and situation.
+Focus on practical next steps.
+
+Tone:
+- professional
+- encouraging
+- non-salesy
+`;
+
+    const userPrompt = `
+User Details:
 - Current Tool: ${toolName}
 - Monthly Spend: $${monthlySpend}
 - Recommended Action: ${auditResult.recommendedAction}
 - Potential Monthly Savings: $${auditResult.monthlySavings}
 - Reasoning: ${auditResult.reasoning}
 
-Generate a personalized summary (~100 words) explaining why they should consider this recommendation, what they'll gain, and any next steps they should take. Be specific and actionable.`;
+Generate a personalized summary (~100 words).
+`;
 
     const message = await client.chat.completions.create({
-      model: 'gpt-4o-mini', 
+      model: 'gpt-4o-mini',
+
       max_tokens: 150,
+
       messages: [
         {
           role: 'system',
@@ -65,22 +89,37 @@ Generate a personalized summary (~100 words) explaining why they should consider
 
     const summary =
       message.choices[0].message.content ||
-      DEFAULT_FALLBACK(toolName, monthlySpend, auditResult.monthlySavings);
+      DEFAULT_FALLBACK(
+        toolName,
+        monthlySpend,
+        auditResult.monthlySavings
+      );
 
     return NextResponse.json({ summary });
   } catch (error) {
     console.error('Error generating summary:', error);
 
-    // Fallback to template-based summary
-    const { toolName, monthlySpend, auditResult } = await req.json();
-    const fallback =
-      FALLBACK_TEMPLATES[toolName]?.(monthlySpend, auditResult.monthlySavings) ||
-      DEFAULT_FALLBACK(toolName, monthlySpend, auditResult.monthlySavings);
+    const { toolName, monthlySpend, auditResult } = body || {};
 
-    return NextResponse.json({
-      summary: fallback,
-      fallback: true,
-      error: 'API rate limit or connection issue. Using fallback summary.',
-    });
+    const fallback =
+      FALLBACK_TEMPLATES[toolName]?.(
+        monthlySpend,
+        auditResult?.monthlySavings || 0
+      ) ||
+      DEFAULT_FALLBACK(
+        toolName || 'AI Tool',
+        monthlySpend || 0,
+        auditResult?.monthlySavings || 0
+      );
+
+    return NextResponse.json(
+      {
+        summary: fallback,
+        fallback: true,
+        error:
+          'API rate limit or connection issue. Using fallback summary.',
+      },
+      { status: 200 }
+    );
   }
 }
