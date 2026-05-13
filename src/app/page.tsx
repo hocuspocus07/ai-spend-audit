@@ -40,7 +40,7 @@ export default function HomePage() {
             </h1>
 
             <p className="text-lg sm:text-xl text-zinc-600 dark:text-zinc-400 max-w-2xl mx-auto">
-              Get a personalized audit of your AI tool stack in seconds. Discover hidden savings, eliminate redundancy, and optimize your team's efficiency.
+              Get a personalized audit of your AI tool stack in seconds. Discover hidden savings, eliminate redundancy, and optimize your team&apos;s efficiency.
             </p>
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
@@ -55,7 +55,7 @@ export default function HomePage() {
             </div>
 
             <p className="text-sm text-zinc-500 dark:text-zinc-400">
-              Takes &lt;3 seconds • No credit card required • Instant results
+              Takes &lt;3 seconds &bull; No credit card required &bull; Instant results
             </p>
           </div>
         </div>
@@ -206,7 +206,7 @@ export default function HomePage() {
                     <span key={i} className="text-yellow-400">★</span>
                   ))}
                 </div>
-                <p className="text-zinc-700 dark:text-zinc-300 mb-4">"{testimonial.quote}"</p>
+                <p className="text-zinc-700 dark:text-zinc-300 mb-4">&quot;{testimonial.quote}&quot;</p>
                 <div className="flex items-center gap-3">
                   <div className="text-2xl">{testimonial.avatar}</div>
                   <div>
@@ -255,9 +255,9 @@ export default function HomePage() {
               <details key={idx} className="group border border-zinc-200 dark:border-zinc-800 rounded-lg p-4 sm:p-6 hover:border-zinc-300 dark:hover:border-zinc-700 cursor-pointer transition-colors">
                 <summary className="flex items-center justify-between font-semibold text-zinc-900 dark:text-white">
                   {item.q}
-                  <span className="text-zinc-400 group-open:rotate-180 transition-transform">
-                    ▼
-                  </span>
+                  <span className="text-zinc-400 group-open:rotate-180 transition-transform" aria-label="expand">
+    &dtrif;
+  </span>
                 </summary>
                 <p className="mt-4 text-zinc-600 dark:text-zinc-400">{item.a}</p>
               </details>

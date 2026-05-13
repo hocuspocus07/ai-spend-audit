@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState} from 'react';
 import { z } from 'zod';
 import { Loader2, Sparkles } from 'lucide-react';
 
@@ -44,26 +44,28 @@ interface AuditFormProps {
 export function AuditForm({ onSubmit }: AuditFormProps) {
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState<Record<string, string>>({});
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState(() => {
+  if (typeof window !== 'undefined') {
+    const saved = localStorage.getItem('auditFormData');
+
+    if (saved) {
+      try {
+        return JSON.parse(saved);
+      } catch (error) {
+        console.error('Failed to load saved form data:', error);
+      }
+    }
+  }
+
+  return {
     toolName: 'ChatGPT',
     plan: 'Plus',
     monthlySpend: '20',
     seats: '1',
     teamSize: '5',
     useCase: 'coding',
-  });
-
-  // Load form data from localStorage on mount
-  useEffect(() => {
-    const saved = localStorage.getItem('auditFormData');
-    if (saved) {
-      try {
-        setFormData(JSON.parse(saved));
-      } catch (error) {
-        console.error('Failed to load saved form data:', error);
-      }
-    }
-  }, []);
+  };
+});
 
   // Save form data to localStorage whenever it changes
   const handleInputChange = (field: string, value: string) => {
@@ -135,7 +137,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
         <div className="space-y-1.5">
           <CardTitle className="text-3xl font-bold tracking-tight">Analyze your AI stack</CardTitle>
           <CardDescription className="text-base text-zinc-500">
-            Identify redundant subscriptions and optimize your team's efficiency.
+            Identify redundant subscriptions and optimize your team&apos;s efficiency.
           </CardDescription>
         </div>
       </CardHeader>
@@ -145,7 +147,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
           <div className="grid gap-6 md:grid-cols-2">
             
             <Field label="AI Tool" error={errors.toolName}>
-              <Select value={formData.toolName} onValueChange={(value:any) => handleInputChange('toolName', value)}>
+              <Select value={formData.toolName} onValueChange={(value: string) => handleInputChange('toolName', value)}>
                 <SelectTrigger className="h-12 rounded-xl">
                   <SelectValue placeholder="Select a tool" />
                 </SelectTrigger>
@@ -160,7 +162,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
             </Field>
 
             <Field label="Current Plan" error={errors.plan}>
-              <Select value={formData.plan} onValueChange={(value:any) => handleInputChange('plan', value)}>
+              <Select value={formData.plan} onValueChange={(value: string) => handleInputChange('plan', value)}>
                 <SelectTrigger className="h-12 rounded-xl">
                   <SelectValue placeholder="Select plan" />
                 </SelectTrigger>
@@ -202,7 +204,7 @@ export function AuditForm({ onSubmit }: AuditFormProps) {
             </Field>
 
             <Field label="Primary Use Case" error={errors.useCase}>
-              <Select value={formData.useCase} onValueChange={(value:any) => handleInputChange('useCase', value)}>
+              <Select value={formData.useCase} onValueChange={(value: string) => handleInputChange('useCase', value)}>
                 <SelectTrigger className="h-12 rounded-xl">
                   <SelectValue placeholder="Select use case" />
                 </SelectTrigger>

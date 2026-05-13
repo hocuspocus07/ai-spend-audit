@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { AuditForm } from "@/components/form/audit-form";
 import { AuditStepper } from "@/components/form/audit-stepper";
 import { AuditProgress } from "@/components/form/audit-progress";
@@ -8,40 +8,56 @@ import { AuditResults } from "@/components/form/audit-results";
 import { AuditRecommendation } from "@/lib/types";
 
 export default function AuditPage() {
-  const [currentStep, setCurrentStep] = useState(1);
-  const [results, setResults] = useState<AuditRecommendation[] | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [auditState, setAuditState] = useState(() => {
+    if (typeof window !== "undefined") {
+      const saved = localStorage.getItem("auditState");
 
-  useEffect(() => {
-    const saved = localStorage.getItem('auditState');
-    if (saved) {
-      try {
-        const { step, results: savedResults } = JSON.parse(saved);
-        if (step === 2 && savedResults && Array.isArray(savedResults)) {
-          setCurrentStep(2);
-          setResults(savedResults);
-        } else if (step === 1) {
-          setCurrentStep(1);
-        } else {
-          localStorage.removeItem('auditState');
-          setCurrentStep(1);
+      if (saved) {
+        try {
+          const parsed = JSON.parse(saved);
+
+          if (
+            parsed.step === 2 &&
+            parsed.results &&
+            Array.isArray(parsed.results)
+          ) {
+            return {
+              currentStep: 2,
+              results: parsed.results as AuditRecommendation[],
+            };
+          }
+
+          if (parsed.step === 1) {
+            return {
+              currentStep: 1,
+              results: null,
+            };
+          }
+        } catch {
+          localStorage.removeItem("auditState");
         }
-      } catch (error) {
-        localStorage.removeItem('auditState');
-        setCurrentStep(1);
       }
     }
-  }, []);
+
+    return {
+      currentStep: 1,
+      results: null,
+    };
+  });
+
+  const { currentStep, results } = auditState;
 
   const handleAuditSubmit = async (data: AuditRecommendation[]) => {
-    setResults(data);
-    setCurrentStep(2);
+    setAuditState({
+      currentStep: 2,
+      results: data,
+    });
     localStorage.setItem('auditState', JSON.stringify({ step: 2, results: data }));
   };
 
   const handleNext = () => {
     const newStep = currentStep + 1;
-    setCurrentStep(newStep);
+    setAuditState(prev => ({ ...prev, currentStep: newStep }));
     // Only persist valid steps (1-2)
     if (newStep <= 2) {
       localStorage.setItem('auditState', JSON.stringify({ step: newStep, results }));
@@ -50,17 +66,11 @@ export default function AuditPage() {
 
   const handlePrevious = () => {
     const newStep = currentStep - 1;
-    setCurrentStep(newStep);
+    setAuditState(prev => ({ ...prev, currentStep: newStep }));
     // Only persist valid steps
     if (newStep >= 1 && newStep <= 2) {
       localStorage.setItem('auditState', JSON.stringify({ step: newStep, results }));
     }
-  };
-
-  const handleReset = () => {
-    setCurrentStep(1);
-    setResults(null);
-    localStorage.removeItem('auditState');
   };
 
   return (

@@ -53,7 +53,7 @@ export function LeadCaptureForm({ auditResults, onSuccess }: LeadCaptureFormProp
       if (data.share_url) {
         onSuccess(data.share_url);
       }
-    } catch (err) {
+    } catch{
       setError('Network error. Please try again.');
     } finally {
       setLoading(false);

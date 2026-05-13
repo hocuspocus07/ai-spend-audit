@@ -1,5 +1,4 @@
 import {
-  AuditContext,
   AuditRule,
 } from '../types';
 
@@ -13,7 +12,7 @@ export const OverprovisionedTeamRule: AuditRule = {
     );
   },
 
-  generate(tool, context: AuditContext) {
+  generate(tool) {
     const estimatedProSpend = 20 * tool.seats;
     const savings = tool.monthlySpend - estimatedProSpend;
 

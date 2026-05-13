@@ -10,7 +10,7 @@ const FALLBACK_TEMPLATES: Record<string, (spend: number, savings: number) => str
   ChatGPT: (spend: number, savings: number) => 
     `Your ChatGPT Plus subscription at $${spend}/month is a solid foundation for general AI tasks. However, we've identified opportunities to optimize. By consolidating to ${savings > 50 ? 'Claude or Gemini' : 'a more selective tool'} based on your team's workflow, you could reduce costs to $${(spend - savings).toFixed(0)}/month without sacrificing quality. Consider your team's actual usage patterns—many teams pay for features they barely use. Evaluating your use case against market alternatives could yield significant savings.`,
   
-  Claude: (spend: number, savings: number) =>
+  Claude: (spend: number) =>
     `Your Claude subscription at $${spend}/month shows strong value for complex reasoning tasks. Yet your team may benefit from a hybrid approach combining Claude for specialized work with a budget-friendly tool for routine tasks. This strategy typically reduces overall spend by 30-40% while maintaining quality. Review whether all team members need full Claude access, or if tiered access could optimize costs while preserving performance for critical tasks.`,
   
   'GitHub Copilot': (spend: number, savings: number) =>
@@ -96,8 +96,8 @@ Generate a personalized summary (~100 words).
       );
 
     return NextResponse.json({ summary });
-  } catch (error) {
-    console.error('Error generating summary:', error);
+  }  catch (apiError) {
+  console.error('Error generating summary:', apiError);
 
     const { toolName, monthlySpend, auditResult } = body || {};
 
