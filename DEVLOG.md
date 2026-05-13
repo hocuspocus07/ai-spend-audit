@@ -1,3 +1,10 @@
+## Day 0 2026-05-06
+**Hours worked:** 1
+**What I did:** Planned on what to do and how to do it, followed design before code approach. 
+**What I learned:** copilot slash commands
+**Blockers / what I'm stuck on:** Reaching out for real world users.
+**Plan for tomorrow:** implement the plan stage 1.
+
 ## Day 1 2026-05-07
 **Hours worked:** 1
 **What I did:** Initialized the Next.js repository, set up the project structure, and created all mandatory markdown files for submission, make plans for future commits.
@@ -33,3 +40,10 @@
 **What I learned:** RLS on supabase
 **Blockers / what I'm stuck on:** Test cases.
 **Plan for tomorrow:** write the essential files for submission.
+
+## Day 6 2026-05-13
+**Hours worked:** 2
+**What I did:** Wrote doc files, finishing touches.
+**What I learned:** Marketing strategies.
+**Blockers / what I'm stuck on:** Implementation of GTM in future if given a chance.
+
